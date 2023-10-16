@@ -15,7 +15,7 @@ class DropPanel(siguientes: Set[panel], players: Player) extends panel{
    *
    * @param entidad Jugador al que se le descontarán estrellas
    */
-  private def drop(entidad: Player): Unit = {
+  def apply(entidad: Player): Unit = {
     if(this.OcupadoPor contains(entidad)){
       val rand = scala.util.Random
       val roll: Int = rand.between(1, 6)
@@ -25,5 +25,7 @@ class DropPanel(siguientes: Set[panel], players: Player) extends panel{
   override var Siguiente: Set[panel] = siguientes
   override var OcupadoPor: Set[Player] = Set()
   override var Pasando: Player = players
+
+
 }
 

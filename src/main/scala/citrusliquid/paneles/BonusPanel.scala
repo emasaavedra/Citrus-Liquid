@@ -21,7 +21,7 @@ class BonusPanel(siguientes: Map[String, panel], players: Player) extends panel 
    * @param entidad Jugador al que se le añaden estrellas
    * @param dado Resultado de lanzar al dado que determinará las cantidades de estrellas a añadirle al jugador
    */
-  private def addEstrellas(entidad: Player, dado: Int): Unit = {
+  def addEstrellas(entidad: Player, dado: Int): Unit = {
     if(this.OcupadoPor contains(entidad)){
       val roll: Int = dado
       val a1 = (entidad.Norma) * roll
@@ -32,7 +32,7 @@ class BonusPanel(siguientes: Map[String, panel], players: Player) extends panel 
 
   override protected var Siguiente: Set[panel] = Set()
   def Siguiente(choice: String): panel = Siguiente(choice)
-  def Siguiente_(choice: String, nextPanel: panel): Unit = Siguiente(choice
+  def Siguiente_(choice: String, nextPanel: panel): Unit = Siguiente(choice)
 
   override var OcupadoPor: Set[Player] = Set()
   override var Pasando: Player = players
@@ -47,15 +47,18 @@ class BonusPanel(siguientes: Map[String, panel], players: Player) extends panel 
     if(Pasando==player){
       if (player.dado == 0) {
         this.OcupadoPor += player
-        val dice: Dado = new Dado
-        val roll: Int = dice.generar()
-        addEstrellas(player, roll)
+        apply(player)
       }
       else {
-        player.dado -= 1
-
+        player.dado-=1
       }
     }
+  }
+
+  def apply(player: Player): Unit = {
+    val dice: Dado = new Dado
+    val roll: Int = dice.generar()
+    addEstrellas(player, roll)
   }
 }
 

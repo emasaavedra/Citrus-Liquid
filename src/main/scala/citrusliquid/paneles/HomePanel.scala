@@ -2,6 +2,8 @@ package citrusliquid.paneles
 
 import citrusliquid.Entidades.Player
 
+
+
 /** La clase simula un panel default, pero está asociada a un Jugador, al cual le otorga la opción de detenerse a voluntad si pasa por él.
  *
  * @param siguientes Conjunto de el o los paneles que están a continuación del panel presente.
@@ -10,10 +12,13 @@ import citrusliquid.Entidades.Player
  *
  */
 
-class HomePanel(siguientes: Set[panel], dueño: Player, player: Player) extends panel {
+class HomePanel(siguientes: Set[panel], sig_frente: panel, sig_arriba: panel, sig_abajo: panel, dueño: Player, player: Player) extends panel {
   private val _owner: Player = dueño
   def owner: Player = _owner
-
+  override val frente: panel = sig_frente //este nunca estará vacío
+  override val arriba: panel = sig_arriba //puede estar vacío
+  override val abajo: panel = sig_abajo //puede estar vacío
+  
   /** Función que detiene al jugador dueño del Home Panel
    *Chequea que el player ejecutando la detención sea efectivamente el dueño, y si lo es le resta sus movimientos restantes y lo añade al Panel
    *
@@ -35,7 +40,7 @@ class HomePanel(siguientes: Set[panel], dueño: Player, player: Player) extends 
    *
    * @param player Jugador que se le realizará un Norma Check
    */
-  private def NormaCheck(player: Player): Unit = {
+  def NormaCheck(player: Player): Unit = {
     if (player.Norma == 1) {
       if (player.estrellas >= 10 || player.Victorias >= 1) {
         player.Norma = 2
@@ -68,7 +73,7 @@ class HomePanel(siguientes: Set[panel], dueño: Player, player: Player) extends 
    *
    * @param player El jugador al que se le terminará el turno
    */
-  protected def EndTurn(player: Player) : Unit = {
+  def EndTurn(player: Player) : Unit = {
     if (this.OcupadoPor contains(player)){
       if (player.HPact + 1 > player.HPmax) { //en caso de que al añadirle 1 punto vida supere el max de vida
         player.HPact = player.HPmax

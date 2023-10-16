@@ -69,13 +69,13 @@ class PanelTest extends FunSuite {
   }
   test("probaremos la función drop"){
     val estrellas: Int = entidad2.estrellas
-    panel_drop.drop(entidad2)
+    panel_drop.apply(entidad2)
     val estrellas2: Int = entidad2.estrellas
     assertEquals(estrellas>estrellas2,true)
   }
   test("probaremos el traspaso de victorias y estrellas de WildUnit a Player"){
     assertEquals(entidad2.Victorias, 0)
-    pollo.HPact = 0
+    pollo.HPact_(0)
     //val estrellas = entidad.estrellas
     duelo_panel.duelo()
     assertEquals(entidad2.Victorias,1)
@@ -86,5 +86,12 @@ class PanelTest extends FunSuite {
     var roll = dado.generar()
     bonus_panel.addEstrellas(entidad2, roll)
     assertEquals(entidad2.estrellas>estrellas, true)
+  }
+  test("jugador ataca y el enemigo se defiende"){
+    val HPinit = pollo.HPact
+    pollo.Estado = "Defending"
+    entidad2.attack(pollo)
+    val HPfin = pollo.HPact
+    assert(HPinit>HPfin)
   }
 }
