@@ -31,8 +31,14 @@ class EncounterPanel(siguientes: Set[panel], player: Player, enemy: Entidad) ext
       player.estrellas_((enemigo.estrellas)+stars2)
     }
   }
+
+  def attack()
+
   override var Siguiente: Set[panel] = siguientes
   override var OcupadoPor: Set[Player] = Set()
   override var Pasando: Player = player
-  private var enemigo: Entidad = enemy
+  protected var enemigo: Entidad = enemy
+  override protected val frente: panel = ???
+  override protected val arriba: panel = ???
+  override protected val abajo: panel = ???
 }

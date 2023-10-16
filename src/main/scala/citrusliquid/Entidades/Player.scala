@@ -18,7 +18,7 @@ import scala.math.floor
  * @param _estrella almacenamos la cantidad de estrellas en cada momento
  */
 
-class Player(private var _panel: panel, private var _nombre: String, private var _HPmax: Int, private var _HPact: Int, private var _ATKp: Int, private var _DEFp: Int, private var _EVAp: Int, private var _Estad: String, private var _estrella: Int) extends Entidad {
+class Player(private var _panel: panel, private var _nombre: String, private var _HPmax: Int, private var _HPact: Int, private var _ATKp: Int, private var _DEFp: Int, private var _EVAp: Int, private var _Estad: String, private var _estrella: Int) extends Unit {
   def dado: Dado = new Dado
   def roll: Int = 0
 
@@ -28,16 +28,16 @@ class Player(private var _panel: panel, private var _nombre: String, private var
     this._Norma = norma
   }
 
-  override def name: String = _nombre
-  override def HPmax: Int = _HPmax
-  override def panel: panel = _panel
-  override def HPact: Int = _HPact
-  override def ATKp: Int = _ATKp
-  override def DEFp: Int = _DEFp
-  override def EVAp: Int = _EVAp
+  def name: String = _nombre
+  def HPmax: Int = _HPmax
+  def panel: panel = _panel
+  def HPact: Int = _HPact
+  def ATKp: Int = _ATKp
+  def DEFp: Int = _DEFp
+  def EVAp: Int = _EVAp
 
   private var _estrellas: Int = _estrella
-  override def estrellas: Int = _estrellas //getter de 'Estrellas'
+  def estrellas: Int = _estrellas //getter de 'Estrellas'
   def estrellas_(num: Int): Unit = { //setter de 'Estrellas'
     this._estrellas = num
   }
@@ -54,10 +54,11 @@ class Player(private var _panel: panel, private var _nombre: String, private var
     this._Victorias=num
   }
 
-  override def Derrotado(enemy: Entidad): Unit = {
+  def Derrotado(enemy: Entidad, chapter: Int): Unit = {
     if(this.HPact==0){
       this.Estado_("K.O.")
       enemy.Victorias_(enemy.Victorias+2)
+      this.Recovery(chapter)
     }
   }
 /*
@@ -89,12 +90,51 @@ class Player(private var _panel: panel, private var _nombre: String, private var
     val dado = dice.generar()
     if (dado == 6-chapter+1){
       println("Te has recuperado!")
-      this.HPact = 1
+      this._HPact = 1
       val dado2: Dado = new Dado
       this.JugarTurno(chapter)
     }
     else{
       println("No te has podido recuperar :(")
+    }
+  }
+
+  def attack(enemy: Entidad): Unit = {
+    val roll: Int = this.dado.generar()
+    val atk: Int = this.ATKp + roll
+    enemy.underAttack(atk)
+  }
+
+  def underAttack(atkp: Int): Unit = {
+    if (this.Estado == "Defending") {
+      this.defend(atkp)
+    }
+    else if (this.Estado == "Evading") {
+      this.evade(atkp)
+    }
+  }
+
+  def answerAttack(enemy: Entidad): Unit = {
+    if (this.HPact > 0) {
+      this.attack(enemy)
+    }
+    else {
+      this.Derrotado(enemy)
+    }
+  }
+
+  def defend(atkp: Int): Unit = {
+    val roll: Int = this.dado.generar()
+    this.HPact -= math.max(1, atkp - (roll + this.DEFp))
+  }
+
+  def evade(atkp: Int): Unit = {
+    val roll: Int = this.dado.generar()
+    if (roll + this.EVAp > atkp) {
+
+    }
+    else {
+      this.HPact -= atkp
     }
   }
 }
